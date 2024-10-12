@@ -1,0 +1,79 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Clinical API
+  description: This is a RESTful API that efficiently organizes and manages all information and activities related to patients and doctors, improving communication and care.
+  contact:
+    name: Abdul Muhith
+    url: https://portfolio-with-html-css.netlify.app/
+    email: amuhith.mern@outlook.com
+servers:
+  - description: Dev
+    url: http://localhost:4000/api/v1
+  - description: Prod
+    url: http://api.post.netlify.app/v1
+tags:
+  - name: Health
+    description: Health Related Endpoints (public)
+  - name: Auth
+    description: Authentication Related Endpoints (public + private)
+  - name: Member
+    description: COMING SOON...
+  - name: Doctor
+    description: COMING SOON...
+  - name: Nurse
+    description: COMING SOON...
+  - name: Appointment
+    description: COMING SOON...
+  - name: Report
+    description: COMING SOON...
+paths:
+  /local/health:
+    get:
+      tags: [Health]
+      summary: Health Check
+      description: This endpoint lets you check whether the service is currently operational. It returns a boolean value—true if the service is running smoothly and false if it is not.
+      responses:
+        "200":
+          description: Service is up and running
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "OK"
+                  uptime:
+                    type: integer
+                    example: 1200  # uptime in seconds
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2024-10-12T12:34:56Z"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Internal Server Error"
+                  error:
+                    type: string
+                    example: "An unexpected error occurred."
+        '503':
+          description: Service is unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Service Unavailable"
+                  error:
+                    type: string
+                    example: "The service is currently down for maintenance."
