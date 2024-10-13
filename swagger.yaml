@@ -123,65 +123,34 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                    example: 201
-                  message:
-                    type: string
-                    description: A human-readable description of the action that occurred.
-                    example: Account request was completed successfully.
-                  data:
-                    type: object
-                    description: A list of the specific credentials used to create the new account.
+                allOf:
+                  - type: object
                     properties:
-                      id:
+                      code:
+                        type: integer
+                        format: int32
+                        example: 201
+                      message:
                         type: string
-                        description: Must be MongoDB Object Id
-                        example: 60d21b4667d0d8992e610c88
-                      username:
-                        type: string
-                        example: Abdullah
-                      phone:
-                        type: string
-                        example: "+8801596528545"
-                      email:
-                        type: string
-                        format: email
-                        example: abdullah@example.com
-                      role:
-                        type: string
-                        enum: [user, doctor, nurse]
-                        example: "user"
-                      status:
-                        type: string
-                        enum: [active, disabled, request changed, pending]
-                        example: pending
-                      created_at:
-                        type: string
-                        format: date-time
-                        example: 2024-09-21T12:34:56Z
-                      updated_at:
-                        type: string
-                        format: date-time
-                        example: 2024-09-21T12:34:56Z
-                  access_token:
-                    type: string
-                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eiur8934yrfuehfiek.sjfieorieflkdjf4a8oytaelfkjdsfd.fjfdlkfjd
-                  expires_in:
-                    type: integer
-                    example: 3600
-                  links:
-                    type: object
+                        description: A human-readable description of the action that occurred.
+                        example: Account request was completed successfully.
+                      data:
+                        allOf:
+                          - type: object
+                          - description: A list of the specific credentials used to create the new account.
+                          - $ref: "#/components/schemas/UserDTO"
+                  - $ref: "#/components/schemas/AccessToken"
+                  - type: object
                     properties:
-                      self:
-                        type: string
-                        example: /api/v1/auth/local/register
-                      login:
-                        type: string
-                        example: /api/v1/auth/local/login
+                      links:
+                        type: object
+                        properties:
+                          self:
+                            type: string
+                            example: /api/v1/auth/local/register
+                          login:
+                            type: string
+                            example: /api/v1/auth/local/login
         400:
           description: Bad request
           content:
@@ -201,121 +170,186 @@ paths:
                     type: array
                     description: An array detailing specific errors encountered in the request.
                     items:
-                      type: object
-                      properties:
-                        code:
-                          type: string
-                          description: A short code representing the type of error.
-                        message:
-                          type: string
-                          description: A detailed message describing the specific error.
-                        field:
-                          type: string
-                          description: The name of the field that caused the error (if applicable).
-                        location:
-                          type: string
-                          enum: [body, query, path, null]
-                          description: The location of the error within the request (e.g., "body" or "query").
-                        status:
-                          type: integer
-                          format: int32
-                          description: An HTTP status code associated with the specific error, usually 400.
-                      example:
-                      - code: MISSING_EMAIL
-                        message: The email address is required.
-                        field: email
-                        location: body
-                        status: 400
-                      - code: MISSING_INPUT
-                        message: Either a password or a confirm password is required.
-                        field: password or confirm_password
-                        location: body
-                        status: 400
-                      - code: INVALID_USERNAME
-                        message: The username must be between 3 and 20 characters.
-                        field: username
-                        location: body
-                        status: 400
-                      - code: INVALID_MOBILE
-                        message: The mobile number provided is invalid.
-                        field: phone
-                        location: body
-                        status: 400
-                      - code: "INVALID_EMAIL"
-                        message: The email format is invalid.
-                        field: email
-                        location: body
-                        status: 400
-                      - code: INVALID_INPUT
-                        message: One or more input fields are invalid.
-                        field: null
-                        location: body
-                        status: 400
-                      - code: EMAIL_TAKEN
-                        message: The email address is already registered.
-                        field: email
-                        location: body
-                        status: 400
+                      allOf:
+                        - $ref: "#/components/schemas/BadRequestError"
+                        - $ref: "#/components/schemas/RegistrationErrorResponse"
                   hints:
                     type: string
                     description: Suggestions or tips to help resolve the error.
                     example: Please, ensure all fields are correctly filled and try again. If the issue persists, feel free to contact our technical support.
                   trace_id:
-                    type: string
-                    format: uuid
-                    description: A unique identifier for the error, useful for tracking and debugging within the system.
-                    example: 550e8400-e29b-41d4-a716-446655440000
+                    $ref: "#/components/schemas/TraceID"
         500:
-          description: Server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                    example: 500
-                  message:
-                    type: string
-                    description: A human-readable description of the error that occurred.
-                    example: Internal Server Error
-                  errors:
-                    type: array
-                    description: An array detailing specific errors encountered in the request.
-                    items:
-                      type: object
-                      properties:
-                        code:
-                          type: string
-                          description: A short code representing the type of error.
-                        message:
-                          type: string
-                          description: A detailed message describing the specific error.
-                        field:
-                          type: string
-                          description: The name of the field that caused the error (if applicable).
-                        location:
-                          type: string
-                          enum: [server, null]
-                          description: The location of the error within the request (e.g., "server" or "null").
-                        status:
-                          type: integer
-                          format: int32
-                          description: An HTTP status code associated with the specific error, usually 500.
-                      example:
-                      - code: SERVER_ERROR
-                        message: An unexpected error occurred on the server.
-                        field: null
-                        location: server
-                        status: 500
-                  hints:
-                    type: string
-                    description: Suggestions or tips to help resolve the error.
-                    example: We are sorry for the inconvenience. Please try again later or reach out to support for help.
-                  trace_id:
-                    type: string
-                    format: uuid
-                    description: A unique identifier for the error, useful for tracking and debugging within the system.
-                    example: 550e8400-e29b-41d4-a716-446655440000
+          $ref: "#/components/responses/500"
+components:
+  schemas:
+    Timestamp:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          example: 2024-09-21T12:34:56Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2024-09-21T12:34:56Z
+    UserDTO:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: string
+              description: Must be MongoDB Object Id
+              example: 60d21b4667d0d8992e610c88
+            username:
+              type: string
+              example: Abdullah
+            phone:
+              type: string
+              example: "+8801596528545"
+            email:
+              type: string
+              format: email
+              example: abdullah@example.com
+            role:
+              type: string
+              enum: [user, doctor, nurse]
+              example: "user"
+            status:
+              type: string
+              enum: [active, disabled, request changed, pending]
+              example: pending
+        - $ref: "#/components/schemas/Timestamp"
+    AccessToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eiur8934yrfuehfiek.sjfieorieflkdjf4a8oytaelfkjdsfd.fjfdlkfjd
+        expires_in:
+          type: integer
+          example: 3600
+    TraceID:
+      type: string
+      format: uuid
+      description: A unique identifier for the error, useful for tracking and debugging within the system.
+      example: 550e8400-e29b-41d4-a716-446655440000
+    BadRequestError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: A short code representing the type of error.
+        message:
+          type: string
+          description: A detailed message describing the specific error.
+        field:
+          type: string
+          description: The name of the field that caused the error (if applicable).
+        location:
+          type: string
+          enum: [body, query, path, null]
+          description: The location of the error within the request (e.g., "body" or "query").
+        status:
+          type: integer
+          format: int32
+          description: An HTTP status code associated with the specific error, usually 400.
+    InternalServerError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: A short code representing the type of error.
+        message:
+          type: string
+          description: A detailed message describing the specific error.
+        field:
+          type: string
+          description: The name of the field that caused the error (if applicable).
+        location:
+          type: string
+          enum: [server, null]
+          description: The location of the error within the request (e.g., "server" or "null").
+        status:
+          type: integer
+          format: int32
+          description: An HTTP status code associated with the specific error, usually 500.
+    RegistrationErrorResponse:
+      example:
+      - code: MISSING_EMAIL
+        message: The email address is required.
+        field: email
+        location: body
+        status: 400
+      - code: MISSING_INPUT
+        message: Either a password or a confirm password is required.
+        field: password or confirm_password
+        location: body
+        status: 400
+      - code: INVALID_USERNAME
+        message: The username must be between 3 and 20 characters.
+        field: username
+        location: body
+        status: 400
+      - code: INVALID_MOBILE
+        message: The mobile number provided is invalid.
+        field: phone
+        location: body
+        status: 400
+      - code: "INVALID_EMAIL"
+        message: The email format is invalid.
+        field: email
+        location: body
+        status: 400
+      - code: INVALID_INPUT
+        message: One or more input fields are invalid.
+        field: null
+        location: body
+        status: 400
+      - code: EMAIL_TAKEN
+        message: The email address is already registered.
+        field: email
+        location: body
+        status: 400
+    ServerErrorResponse:
+      example:
+        - code: SERVER_ERROR
+          message: An unexpected error occurred on the server.
+          field: null
+          location: server
+          status: 500
+  responses:
+    500:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 500
+              message:
+                type: string
+                description: A human-readable description of the error that occurred.
+                example: Internal Server Error
+              errors:
+                type: array
+                description: An array detailing specific errors encountered in the request.
+                items:
+                  allOf:
+                    - $ref: "#/components/schemas/InternalServerError"
+                    - $ref: "#/components/schemas/ServerErrorResponse"
+              hints:
+                type: string
+                description: Suggestions or tips to help resolve the error.
+                example: We are sorry for the inconvenience. Please try again later or reach out to support for help.
+              trace_id:
+                $ref: "#/components/schemas/TraceID"
+
+
+
+
 
