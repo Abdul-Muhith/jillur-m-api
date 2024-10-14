@@ -158,12 +158,12 @@ paths:
                     description: A human-readable description of the error that occurred.
                     example: Validation Error
                   errors:
-                    type: array
-                    description: An array detailing specific errors encountered in the request.
-                    items:
-                      allOf:
-                        - $ref: "#/components/schemas/BadRequestError"
-                        - $ref: "#/components/schemas/RegistrationErrorResponse"
+                    allOf:
+                      - type: array
+                        description: An array detailing specific errors encountered in the request.
+                        items:
+                        $ref: "#/components/schemas/BadRequestError"
+                      - $ref: "#/components/schemas/RegistrationErrorResponse"
                   hints:
                     type: string
                     description: Suggestions or tips to help resolve the error.
@@ -248,12 +248,12 @@ paths:
                     description: A human-readable description of the error that occurred.
                     example: Validation Error
                   errors:
-                    type: array
-                    description: An array detailing specific errors encountered in the request.
-                    items:
-                      allOf:
-                        - $ref: "#/components/schemas/BadRequestError"
-                        - $ref: "#/components/schemas/LoginErrorResponse"
+                    allOf:
+                      - type: array
+                        description: An array detailing specific errors encountered in the request.
+                        items:
+                          $ref: "#/components/schemas/BadRequestError"
+                      - $ref: "#/components/schemas/LoginErrorResponse"
                   hints:
                     type: string
                     description: Suggestions or tips to help resolve the error.
@@ -276,22 +276,22 @@ paths:
                     description: A human-readable description of the error that occurred.
                     example: Invalid Credentials
                   errors:
-                    type: array
-                    description: An array detailing specific errors encountered in the request.
-                    items:
-                      allOf:
-                        - $ref: "#/components/schemas/NotFoundError"
-                        - example:
-                          - code: ACCOUNT_NOT_FOUND
-                            message: The account you are looking for could not be found.
-                            field: email
-                            location: body
-                            status: 404
-                          - code: NOT_FOUND
-                            message: The account does not exist based on the provided details.
-                            field: email or password
-                            location: body
-                            status: 404
+                    allOf:
+                      - type: array
+                        description: An array detailing specific errors encountered in the request.
+                        items:
+                          $ref: "#/components/schemas/NotFoundError"
+                      - example:
+                        - code: ACCOUNT_NOT_FOUND
+                          message: The account you are looking for could not be found.
+                          field: email
+                          location: body
+                          status: 404
+                        - code: NOT_FOUND
+                          message: The account does not exist based on the provided details.
+                          field: email or password
+                          location: body
+                          status: 404
                   hints:
                     type: string
                     description: Suggestions or tips to help resolve the error.
@@ -494,14 +494,13 @@ components:
                 type: array
                 description: An array detailing specific errors encountered in the request.
                 items:
-                  allOf:
-                    - $ref: "#/components/schemas/InternalServerError"
-                    - example:
-                      - code: SERVER_ERROR
-                        message: An unexpected error occurred on the server.
-                        field: null
-                        location: server
-                        status: 500
+                  $ref: "#/components/schemas/InternalServerError"
+                example:
+                  - code: SERVER_ERROR
+                    message: An unexpected error occurred on the server.
+                    field: null
+                    location: server
+                    status: 500
               hints:
                 type: string
                 description: Suggestions or tips to help resolve the error.
@@ -527,14 +526,13 @@ components:
                 type: array
                 description: An array detailing specific errors encountered in the request.
                 items:
-                  allOf:
-                    - $ref: "#/components/schemas/InternalServerError"
-                    - example:
-                      - code: SERVICE_UNAVAILABLE
-                        message: The service is currently (2024-10-12T12:34:56Z) unavailable.
-                        field: null
-                        location: server
-                        status: 503
+                    $ref: "#/components/schemas/InternalServerError"
+                example:
+                  - code: SERVICE_UNAVAILABLE
+                    message: The service is currently (2024-10-12T12:34:56Z) unavailable.
+                    field: null
+                    location: server
+                    status: 503
               hints:
                 type: string
                 description: Suggestions or tips to help resolve the error.
