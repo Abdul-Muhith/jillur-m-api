@@ -304,6 +304,9 @@ paths:
           $ref: "#/components/responses/503"
   /auth/verification/account-verification:
     get:
+      operationId: verifyAccount
+      security:
+        - bearerAuth: []
       tags: [Auth]
       summary: Verify the exiting account by assigning their roles.
       description: This endpoint allows an authenticated user to verify other accounts and assign roles through a unique user ID.
@@ -424,6 +427,11 @@ paths:
         503:
           $ref: "#/components/responses/503"
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     Timestamp:
       type: object
