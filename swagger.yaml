@@ -312,6 +312,24 @@ paths:
       description: This endpoint allows an authenticated user to verify other accounts and assign roles through a unique user ID.
       parameters:
         - $ref: "#/components/parameters/idPathParam"
+      requestBody:
+        description: To verify additional accounts, please ensure you provide valid credentials, including role and status.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+                  nullable: false
+                  enum: [user, nurse, doctor, administrator]
+                  example: user
+                status:
+                  type: string
+                  nullable: false
+                  enum: [active, disabled, request changed, pending]
+                  example: active
+              required: [role, status]
       responses:
         200:
           description: Account verification was successful.
@@ -368,17 +386,7 @@ paths:
                         description: An array detailing specific errors encountered in the request.
                         items:
                           $ref: "#/components/schemas/BadRequestError"
-                      - example:
-                        - code: MISSING_ID
-                          message: The member id is required.
-                          field: memberId
-                          location: path
-                          status: 400
-                        - code: INVALID_ID
-                          message: The member id provided is invalid.
-                          field: memberId
-                          location: path
-                          status: 400
+                      - $ref: "#/components/schemas/AccountVerificationErrorResponse"
                   hints:
                     type: string
                     description: Suggestions or tips to help resolve the error.
@@ -464,7 +472,7 @@ components:
               example: abdullah@example.com
             role:
               type: string
-              enum: [user, doctor, nurse]
+              enum: [user, nurse, doctor, administrator]
               example: "user"
             status:
               type: string
@@ -581,6 +589,38 @@ components:
         field: email
         location: body
         status: 400
+    AccountVerificationErrorResponse:
+      example:
+        - code: MISSING_ID
+          message: The member id is required.
+          field: memberId
+          location: path
+          status: 400
+        - code: MISSING_INPUT
+          message: Either a role or a status is required.
+          field: role or status
+          location: body
+          status: 400
+        - code: INVALID_ID
+          message: The member id provided is invalid.
+          field: memberId
+          location: path
+          status: 400
+        - code: INVALID_ROLE
+          message: The role provided is invalid.
+          field: role
+          location: body
+          status: 400
+        - code: INVALID_STATUS
+          message: The status provided is invalid.
+          field: status
+          location: body
+          status: 400
+        - code: INVALID_INPUT
+          message: One or more input fields are invalid.
+          field: role and status
+          location: body
+          status: 400
     LoginErrorResponse:
       example:
       - code: MISSING_INPUT
@@ -762,7 +802,7 @@ components:
               message:
                 type: string
                 description: A human-readable description of the error that occurred.
-                example:  Service is Unavailable
+                example:  Service is unavailable
               errors:
                 type: array
                 description: An array detailing specific errors encountered in the request.
