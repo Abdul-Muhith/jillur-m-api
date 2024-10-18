@@ -1,21 +1,16 @@
 import express from "express";
 
-import { globalError, notFoundHandler } from "./middlewares/globalError.js";
 import applyMiddleware from "./middlewares/applyMiddleware.js";
-import routes from "./routes/index.js";
 
 const app = express();
 
-// → → → Apply middleware configurations here → → →
+// → → → middlewares setup here → → →
 applyMiddleware(app);
 
-// → → → Set up application routes here → → →
-app.use(routes);
+// TODO: setup here routes later → → →
 
-// → → → Handle 404 NOT FOUND errors for any route → → →
-app.use(notFoundHandler);
+// TODO: NOT FOUND ERROR HANDLING → → →
 
-// → → → Register global error handling middleware → → →
-app.use(globalError);
+// TODO: GLOBAL ERROR HANDLING → → →
 
 export default app;
