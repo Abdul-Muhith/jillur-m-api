@@ -15,18 +15,6 @@ servers:
 tags:
   - name: Health
     description: Health Related Endpoints (public)
-  - name: Auth
-    description: Authentication Related Endpoints (public + private)
-  - name: Member
-    description: Member Related Endpoints (public + private)
-  - name: Doctor
-    description: COMING SOON...
-  - name: Nurse
-    description: COMING SOON...
-  - name: Appointment
-    description: COMING SOON...
-  - name: Report
-    description: COMING SOON...
 paths:
   /local/health:
     get:
