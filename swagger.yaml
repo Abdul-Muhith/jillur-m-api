@@ -11,7 +11,7 @@ servers:
   - description: Dev
     url: http://localhost:4000/api/v1
   - description: Prod
-    url: https://clinical-api.onrender.com/api/v1/
+    url: https://clinical-api.onrender.com/v1
 tags:
   - name: Health
     description: Health Related Endpoints (public)
@@ -66,6 +66,8 @@ paths:
           $ref: "#/components/responses/500"
         503:
           $ref: "#/components/responses/503"
+components:
+  schemas:
   /auth/local/register:
     post:
       tags: [Auth]
@@ -720,6 +722,7 @@ components:
           type: integer
           format: int32
           description: An HTTP status code associated with the specific error, usually 500.
+  responses:
     RegistrationErrorResponse:
       example:
       - code: MISSING_EMAIL
@@ -1140,5 +1143,3 @@ components:
       schema:
         type: string
         default: ""
-
-
