@@ -1,18 +1,25 @@
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 
-// Load environment variables from .env file
-dotenv.config();
+import config from "./index.js";
 
-let connectionURL = process.env.DB_CONNECTION_URL;
+let URL = ``;
+let URL_QUERY = ``;
 
-connectionURL = connectionURL.replace("<username>", process.env.DB_USER_NAME);
-connectionURL = connectionURL.replace("<password>", process.env.DB_PASSWORD);
-connectionURL = `${connectionURL}/${process.env.DB_NAME}?${process.env.DB_URL_QUERY}`;
+if (config.type == "test") {
+  URL = config.devDbConnectionUrl;
+  URL_QUERY = config.devDbConnectionUrlQuery;
+} else {
+  URL = config.prodDbConnectionUrl;
+  URL_QUERY = config.prodDbConnectionUrlQuery;
+}
+
+URL = URL.replace("<username>", config.databaseUsername);
+URL = URL.replace("<password>", config.databasePassword);
+URL = `${URL}/${config.databaseName}?${URL_QUERY}`;
 
 const connectDB = async () => {
   // try {
-  await mongoose.connect(connectionURL, {});
+  await mongoose.connect(URL, {});
   // useNewUrlParser: true, // provides better support for connection strings using newer MongoDB features.
   // useUnifiedTopology: true, // provides a more robust and flexible way of managing connections to the MongoDB server
 
@@ -24,8 +31,4 @@ const connectDB = async () => {
   // }
 };
 
-const db = {
-  connectDB,
-};
-
-export default db;
+export default { connectDB };
