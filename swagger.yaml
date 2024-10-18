@@ -648,6 +648,46 @@ components:
       format: uuid
       description: A unique identifier for the error, useful for tracking and debugging within the system.
       example: 550e8400-e29b-41d4-a716-446655440000
+    BadRequestError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: A short code representing the type of error.
+        message:
+          type: string
+          description: A detailed message describing the specific error.
+        field:
+          type: string
+          description: The name of the field that caused the error (if applicable).
+        location:
+          type: string
+          enum: [body, query, path, null]
+          description: The location of the error within the request (e.g., "body" or "query").
+        status:
+          type: integer
+          format: int32
+          description: An HTTP status code associated with the specific error, usually 400.
+    NotFoundError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: A short code representing the type of error.
+        message:
+          type: string
+          description: A detailed message describing the specific error.
+        field:
+          type: string
+          description: The name of the field that caused the error (if applicable).
+        location:
+          type: string
+          enum: [body, query, path, null]
+          description: The location of the error within the request (e.g., "body" or "query").
+        status:
+          type: integer
+          format: int32
+          description: An HTTP status code associated with the specific error, usually 404.
     InternalServerError:
       type: object
       properties:
